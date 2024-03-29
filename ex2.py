@@ -1,13 +1,17 @@
 """
 QUESTION ONE
-1. List two possible ways to implement this queue, with different efficiency (a slow one which uses linear search, and something faster).
--linear search and using heaps
+List two possible ways to implement this queue, with different efficiency (a slow one which uses linear search, and something faster).
+-linear search (slow algorithm) and using heaps (fast algorithm)
 
+QUESTION 4
+
+After plotting the histograms and printing the average time for both algorithms, it can be observed that using heaps is faster than linear search. 
+This is because, when using linear search, the complexity is O(|V|^2), while using heaps results in a complexity of O((|E| + |V|) log V). 
+The heap algorithm is faster because it employs a priority queue to store the nodes and their distances.
 """
 
 import heapq
 import timeit 
-import time
 import matplotlib.pyplot as plt
 
 class Node:
@@ -46,13 +50,12 @@ class Graph:
             print("Error: Current node is None.")
             return []
 
-        print("Current node:", node.data)  # Debugging output
+        #print("Current node:", node.data)  # Debugging output
         if node not in self.adjacency_list:
             print("Error: Node not found in adjacency list.")
             return []
         return self.adjacency_list[node]
 
-    
     def importFromFile(self, filename):
         self.adjacency_list = {}
         try:
@@ -86,9 +89,7 @@ class Graph:
                             self.addNode(n1)
                         if n2 not in self.adjacency_list:
                             self.addNode(n2)
-                        self.addEdge(n1, n2, weight)
-
-                        
+                        self.addEdge(n1, n2, weight)     
             return True  
         except FileNotFoundError:
             return None  
@@ -102,7 +103,7 @@ class Graph:
             print(node.data, "->", [(adjacent_node[0].data, adjacent_node[1]) for adjacent_node in adjacent_nodes])
   
     
-#linear seach implementation
+#LI NEAR SEARCH IMPLEMENTATION
 def slowDji(graph, start):
     # Initialize the distance of all nodes to infinity
     distance = {node: float('infinity') for node in graph.adjacency_list}
@@ -115,15 +116,20 @@ def slowDji(graph, start):
         current = None
         min_distance = float('infinity')
 
+        #used chatpgt
         for node in graph.adjacency_list:
             # Check if the node has been visited and if the distance is less than the minimum distance
             # If true, update the minimum distance and the current node
             if node not in visited and distance[node] < min_distance:
                 min_distance = distance[node]
                 current = node
-        visited.add(current)
 
-        print("Processing node:", current.data)  # Debugging output
+        if current is None:
+            break  # Exit loop if there are no more nodes to visit
+        visited.add(current)
+        #end of chatgpt
+
+        #print("Processing node:", current.data)  # Debugging output
         for neighbor, weight in graph.neighbors(current):
             # Update the distance of the neighbor if the current distance + weight is less than neighbor's current distance 
             newPath = distance[current] + weight
@@ -132,7 +138,8 @@ def slowDji(graph, start):
         
     return distance
 
-    
+
+#FAST IMPLEMENTATION USING HEAPS
 def fastDji(graph, start):
     #initialize the distance of all nodes to infinity
     distance = {node: float('infinity') for node in graph.adjacency_list}
@@ -146,16 +153,16 @@ def fastDji(graph, start):
             continue
         visited.add(current)
         
+        #used chatgpt
         for neighbor, weight in graph.neighbors(current):
             newPath = current_distance + weight
             if newPath < distance[neighbor]:
                 distance[neighbor] = newPath
                 heapq.heappush(heap, (newPath, neighbor))
+        #end of chatgpt
     return distance
 
-"""
-#used chatgpt
-def performance(graph):
+def measure_performance(graph):
     slowAlgorithm = []
     fastAlgorithm = []
 
@@ -167,69 +174,40 @@ def performance(graph):
     fastAvg = sum(fastAlgorithm) / len(fastAlgorithm)
 
     return slowAlgorithm, fastAlgorithm, slowAvg, fastAvg
-#end of chatgpt
- """
 
+def plot_histogram(dataOne, dataTwo):
+    #plt.hist([dataOne, dataTwo], bins=20, alpha=0.7, label=['linear search', 'heaps'])
+    plt.hist(dataOne, bins=20, alpha=0.5, color='blue', label='linear search')
+    plt.hist(dataTwo, bins=20, alpha=0.5, color='purple', label='heaps (priority queue)')
+    plt.title("Dijkstra’s Algorithm Performance Compariso")
+    plt.xlabel('Time')
+    plt.ylabel('Frequency')
+    plt.legend()
+    plt.show()
 
-def measure_performance(graph):
-    slow_times = []
-    fast_times = []
-
-    for node in graph.adjacency_list:
-        if node is None:
-            print("Error: Found a None node.")
-            continue
-        print("Processing node:", node.data)  # Print the node being processed
-        start_time = time.time()
-        slowDji(graph, node)
-        slow_times.append(time.time() - start_time)
-
-        start_time = time.time()
-        fastDji(graph, node)
-        fast_times.append(time.time() - start_time)
-
-    slow_avg = sum(slow_times) / len(slow_times)
-    fast_avg = sum(fast_times) / len(fast_times)
-
-    return slow_times, fast_times, slow_avg, fast_avg
-    
-# Test the importFromFile method
 
 example = Graph()
 result = example.importFromFile('random.dot')
 if result is True:
     print("Graph imported successfully!")
-    print("Nodes in the graph:", [node.data for node in example.adjacency_list.keys()])
-
+    #print("Nodes in the graph:", [node.data for node in example.adjacency_list.keys()])
     #graph.printGraph()
 elif result is None:
     print("Error occurred during import or file not found.")
 else:
     print("Invalid GraphViz file.")
 
-#slowTime, fastTime, slowAvg, fastAvg = measure_performance(example)
-resultOne = measure_performance(example)
-print(result)
+slowTime, fastTime, slowAvg, fastAvg = measure_performance(example)
 
-"""
-print("Slow Algorithm:")
+print("-Slow Algorithm-")
 print("Average time:", slowAvg)
-print("Max time:", max(slowTime))
-print("Min time:", min(slowTime))
 
-print("\nFast Algorithm:")
+#print("Max time:", max(slowTime))
+#print("Min time:", min(slowTime))
+
+print("\n-Fast Algorithm-")
 print("Average time:", fastAvg)
-print("Max time:", max(fastTime))
-print("Min time:", min(fastTime))
+#print("Max time:", max(fastTime))
+#print("Min time:", min(fastTime))
 
-
-def plot_histogram(data, title):
-    plt.hist(data, bins=20)
-    plt.title(title)
-    plt.xlabel('Time')
-    plt.ylabel('Frequency')
-    plt.show()
-
-plot_histogram(slowTime, 'Dijkstra’s Algorithm using linear search (slow implementation)')
-plot_histogram(fastTime, 'Dijkstra’s Algorithm using heaps (fast implementation)')
-"""
+plot_histogram(slowTime, fastTime)
