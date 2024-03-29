@@ -1,4 +1,3 @@
-
 class Node:
     def __init__(self, data):
         self.data = data
@@ -22,19 +21,20 @@ class Graph:
         if n1 not in self.adjacency_list or n2 not in self.adjacency_list:
             raise ValueError("One of the nodes does not exist in the graph. Try again")
         self.adjacency_list[n1].append((n2, weight))
-        self.adjacency_list[n2].append((n1, weight))
     
     def removeEdge(self, n1, n2):
         if n1 not in self.adjacency_list or n2 not in self.adjacency_list:
             raise ValueError("One of the nodes does not exist in the graph. Try again")
-        self.adjacency_list[n1].remove(n2)
-        self.adjacency_list[n2].remove(n1)
+        #self.adjacency_list[n1].remove(n2)
+        #self.adjacency_list[n2].remove(n1)
+        self.adjacency_list[n1] = [edge for edge in self.adjacency_list[n1] if edge[0] != n2]
     
     #used chatgpt
     def printGraph(self):
         print("Nodes and Adjacency List:")
         for node, adjacent_nodes in self.adjacency_list.items():
             print(node.data, "->", [(adjacent_node[0].data, adjacent_node[1]) for adjacent_node in adjacent_nodes])
+
     #end of chatgpt
             
     def importFromFile(self, filename):
@@ -78,9 +78,10 @@ class Graph:
             return None  
         except Exception as e:
             print("Error:", e)
-            return None  
-        
-# Create a graph
+            return None 
+
+    
+
 graph = Graph()
 
 nodeOne = Node("A")
@@ -102,7 +103,7 @@ for node, adjacent_nodes in graph.adjacency_list.items():
     print(node.data, "->", [adjacent_node[0].data for adjacent_node in adjacent_nodes]) 
 """
 
-graph.removeNode(nodeThree)
+graph.removeNode(nodeFour)
 graph.printGraph()
 print (" ")
 
@@ -113,9 +114,11 @@ graph = Graph()
 result = graph.importFromFile('try.dot')
 if result is True:
     print("Graph imported successfully!")
-    graph.printGraph()
+    #graph.printGraph()
 elif result is None:
     print("Error occurred during import or file not found.")
 else:
     print("Invalid GraphViz file.")
+
 """
+
