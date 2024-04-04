@@ -1,5 +1,6 @@
 """
-Before running the code, make usre you have the random.dot in the same directory so the code runs properly :)
+Before running the code, make sure you have the random.dot in the same directory so the code runs properly :)
+
 QUESTION ONE
 List two possible ways to implement this queue, with different efficiency (a slow one which uses linear search, and something faster).
 -linear search (slow algorithm) and using heaps (fast algorithm)
@@ -104,7 +105,7 @@ class Graph:
             print(node.data, "->", [(adjacent_node[0].data, adjacent_node[1]) for adjacent_node in adjacent_nodes])
   
     
-#LI NEAR SEARCH IMPLEMENTATION
+#LINEAR SEARCH IMPLEMENTATION
 def slowDji(graph, start):
     # Initialize the distance of all nodes to infinity
     distance = {node: float('infinity') for node in graph.adjacency_list}
@@ -180,7 +181,7 @@ def plot_histogram(dataOne, dataTwo):
     #plt.hist([dataOne, dataTwo], bins=20, alpha=0.7, label=['linear search', 'heaps'])
     plt.hist(dataOne, bins=20, alpha=0.5, color='blue', label='linear search')
     plt.hist(dataTwo, bins=20, alpha=0.5, color='purple', label='heaps (priority queue)')
-    plt.title("Dijkstra’s Algorithm Performance Compariso")
+    plt.title("Dijkstra’s Algorithm Performance Comparison")
     plt.xlabel('Time')
     plt.ylabel('Frequency')
     plt.legend()
