@@ -1,4 +1,5 @@
 """
+Before running the code, make usre you have the random.dot in the same directory so the code runs properly :)
 QUESTION ONE
 List two possible ways to implement this queue, with different efficiency (a slow one which uses linear search, and something faster).
 -linear search (slow algorithm) and using heaps (fast algorithm)
